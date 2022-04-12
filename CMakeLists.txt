@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.21)
-project(arrays VERSION 1.0.0 )
+project(Arrays VERSION 1.0.0 )
 set(CMAKE_CXX_STANDARD 20)
 set(DEFAULT_BUILD_TYPE "Release")
+
+set(LibraryName ${PROJECT_NAME})
 
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     message(STATUS "Setting build type to '${DEFAULT_BUILD_TYPE}' as none was specified.")
@@ -24,13 +26,13 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         VERSION ${PROJECT_VERSION}
         SOVERSION 1)
 
-install(TARGETS ${PROJECT_NAME} EXPORT MyLibConfig
+install(TARGETS ${PROJECT_NAME} EXPORT ${LibraryName}Config
         ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
 
-install(EXPORT MyLibConfig DESTINATION share/MyLib/cmake)
+install(EXPORT ${LibraryName}Config DESTINATION share/${LibraryName}/cmake)
 
-export(TARGETS ${PROJECT_NAME} FILE MyLibConfig.cmake)
+export(TARGETS ${PROJECT_NAME} FILE ${LibraryName}Config.cmake)
