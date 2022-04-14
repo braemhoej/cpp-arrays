@@ -53,8 +53,8 @@ public:
    * Creates new array as 'fresh' copy of 'initializer'.
    * @param initializer
    */
-  Array(Array<T>& initializer) : head_(new T[initializer.size()]), length_(initializer.size()) {
-    std::copy(initializer.begin(), initializer.end(), begin());
+  Array(const Array<T>& initializer) : head_(new T[initializer.size()]), length_(initializer.size()) {
+    std::copy(initializer.head_, initializer.head_+initializer.length_, begin());
   }
 
   /**

@@ -23,6 +23,7 @@ TEST(Initialization, ArraysCanBeInitializedFromPointers) {
 
 TEST(Assignment, ArrayElementsCanBeReassigned) {
   Array<int> array = Array<int>(40, 42);
+  Array<int> copy = Array<int>(array);
     array[10] = 10;
     for (int i = 0; i < array.size(); i++) {
         if (i != 10) {
