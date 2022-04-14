@@ -5,9 +5,8 @@
 #include <gtest/gtest.h>
 #include "../src/array.hpp"
 
-
 TEST(Initialization, ArraysCanBeInitializedWithValue) {
-    Array<int> array = Array<int>(40, 42);
+  Array<int> array = Array<int>(40, 42);
     for (int i = 0; i < array.size(); i++) {
         EXPECT_EQ(42, array[i]);
     }
@@ -23,7 +22,7 @@ TEST(Initialization, ArraysCanBeInitializedFromPointers) {
 }
 
 TEST(Assignment, ArrayElementsCanBeReassigned) {
-    Array<int> array = Array<int>(40, 42);
+  Array<int> array = Array<int>(40, 42);
     array[10] = 10;
     for (int i = 0; i < array.size(); i++) {
         if (i != 10) {
@@ -35,6 +34,6 @@ TEST(Assignment, ArrayElementsCanBeReassigned) {
 }
 
 TEST(Size, ArraysSizeReturnsCapacity) {
-    Array<int> array = Array<int>(40);
+  Array<int> array = Array<int>(40);
     EXPECT_EQ(40, array.size());
 }

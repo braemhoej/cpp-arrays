@@ -12,101 +12,109 @@
  * Fixed capacity container for elements of type T. Stores elements dynamically.
  * @tparam T
  */
-template <typename T>
-class Array {
-    typedef T* Pointer;
-    typedef Pointer Iterator;
-    typedef T& Reference;
-    typedef std::size_t Size;
+template <class T> class Array {
 public:
-    /**
-     * Creates an empty array with zero capacity.
-     */
-    Array() : container_(nullptr), capacity_(0), auto_destruct(false) { }
-    /**
-     * Creates new array with given capacity.
-     * @param capacity
-     */
-    explicit Array(Size capacity): container_(new T[capacity]), capacity_(capacity), auto_destruct(true) { };
+  typedef T *pointer;
+  typedef T* iterator;
+  typedef T& reference;
+  typedef T& const_reference;
+  typedef std::size_t size_type;
+  /**
+   * Creates an empty array with zero capacity.
+   */
+  Array() : head_(nullptr), length_(0) { }
 
-    /**
-     * Creates new array with given capacity, and fills it with copies of 't'.
-     * @param capacity
-     * @param t
-     */
-    Array(Size capacity, const T& t) : container_(new T[capacity]), capacity_(capacity), auto_destruct(true) {
-        fill(t);
-    }
+  /**
+   * Creates new array with given capacity.
+   * @param capacity
+   */
+  explicit Array(size_type capacity)
+      : head_(new T[capacity]), length_(capacity){};
+  
+  /**
+   * Creates new array with given capacity, and fills it with copies of 't'.
+   * @param capacity
+   * @param t
+   */
+  Array(size_type capacity, const T &t)
+      : head_(new T[capacity]), length_(capacity) {
+    fill(t);
+  }
 
-    /**
-     * Creates new array at begin. Doesn't deallocate data upon destruction.
-     * @param begin T*
-     * @param capacity unsigned long
-     */
-    Array(Pointer begin, unsigned long capacity) : container_(begin), capacity_(capacity), auto_destruct(
-            false) { }
+  /**
+   * Creates new array at begin. Doesn't deallocate data upon destruction.
+   * @param begin T*
+   * @param capacity unsigned long
+   */
+  Array(pointer begin, unsigned long capacity)
+      : head_(begin), length_(capacity) {}
 
-    /**
-     * Destructor. Deletes every element.
-     */
-    ~Array() {
-        if (auto_destruct)
-            delete[] container_;
-    }
+  /**
+   * Destructor. Deletes every element.
+   */
+  ~Array() { delete[] head_; }
 
-    /**
-     * Unsafe container access.
-     * @param index of element.
-     * @return Reference.
-     */
-    Reference operator[](unsigned long index) {
-        return container_[index];
-    }
-    /**
-     * Returns a Pointer to the beginning of the array.
-     * @return
-     */
-    Iterator begin() {
-        return container_;
-    }
-    /**
-     * Returns a Pointer to the end of the array, regardless of whether the space has been filled.
-     * @return
-     */
-    Iterator end() {
-        return container_ + capacity_;
-    }
+  /**
+   * Unsafe container access.
+   * @param index of element.
+   * @return reference.
+   */
+  reference operator[](unsigned long index) { return head_[index]; }
 
-    /**
-     * Fills the array with copies of the specified element.
-     * @param t
-     */
-    void fill(const T& t) {
-        std::fill_n(container_, capacity_, t);
-    }
+  /**
+   * Unsage container access.
+   * @param index of element.
+   * @return const reference.
+   */
+  const_reference operator[](unsigned long index) const { return head_[index]; }
 
-    /**
-     * Returns the Size (capacity) of the array.
-     * @return size_t
-     */
-    Size size() const {
-        return capacity_;
-    }
+  /**
+   * Returns a pointer to the beginning of the array.
+   * @return
+   */
+  iterator begin() { return head_; }
+  /**
+   * Returns a pointer to the end of the array, regardless of whether the space
+   * has been filled.
+   * @return
+   */
+  iterator end() { return head_ + length_; }
 
-    /**
-     * Returns a fresh copy of this array with a new address.
-     * @return Array<T>
-     */
-    Array<T> copy() {
-        Array<T> copy = Array<T>(capacity_);
-        std::copy(begin(), end(), copy.begin());
-        return copy;
-    }
+  /**
+   * Fills the array with copies of the specified element.
+   * @param t
+   */
+  void fill(const T &t) { std::fill_n(head_, length_, t); }
+
+  /**
+   * Returns the size_type (capacity) of the array.
+   * @return size_t
+   */
+  [[nodiscard]] size_type size() const { return length_; }
+
+  /**
+   * Returns a fresh copy of this array with a new address.
+   * @return array<T>
+   */
+  Array<T> copy() {
+    Array<T> copy = Array<T>(length_);
+    std::copy(begin(), end(), copy.begin());
+    return copy;
+  }
+
+  /**
+   * Set internal container and capacity.
+   * @param container T*
+   * @param capacity size_type
+   */
+  void set(T* container, size_type capacity) {
+    head_ = container;
+    length_ = capacity;
+  }
+
 private:
-    Pointer container_;
-    Size capacity_;
-    bool auto_destruct;
+  pointer head_;
+  size_type length_;
 };
 
-
-#endif //ATB_ARRAY_H
+#endif // ATB_ARRAY_H
