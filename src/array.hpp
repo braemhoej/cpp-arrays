@@ -47,12 +47,15 @@ public:
    * @param capacity unsigned long
    */
   Array(pointer begin, unsigned long capacity)
-      : head_(begin), length_(capacity) {}
+      : head_(begin), length_(capacity), auto_destruct(false) { }
 
   /**
    * Destructor. Deletes every element.
    */
-  ~Array() { delete[] head_; }
+  ~Array() {
+    if (auto_destruct)
+      delete[] head_;
+  }
 
   /**
    * Unsafe container access.
@@ -113,8 +116,12 @@ public:
   }
 
 private:
+  // Pointer to the head of the dynamically allocated memory.
   pointer head_;
+  // Length (# of T) of allocated memory.
   size_type length_;
+  // Boolean specifying whether the head_ should be destroyed when object is destroyed.
+  bool auto_destruct = true;
 };
 
 #endif // ATB_ARRAY_H
