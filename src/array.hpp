@@ -73,13 +73,6 @@ public:
   reference operator[](unsigned long index) { return head_[index]; }
 
   /**
-   * Unsage container access.
-   * @param index of element.
-   * @return const reference.
-   */
-  const_reference operator[](unsigned long index) const { return head_[index]; }
-
-  /**
    * Returns a pointer to the beginning of the array.
    * @return
    */
