@@ -58,6 +58,13 @@ public:
   }
 
   /**
+   * Move constructor.
+   * @param initializer
+   */
+  Array(const Array<T>&& initializer) : head_(initializer.head_), length_(initializer.size()) {
+  }
+
+  /**
    * Destructor. Deletes every element.
    */
   ~Array() {
