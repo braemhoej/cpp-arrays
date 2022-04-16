@@ -8,35 +8,37 @@
 #include <algorithm>
 #include <cstddef>
 
+namespace arrays {
+
 /**
  * Fixed capacity container for elements of type T. Stores elements dynamically.
  * @tparam T
  */
-template <class T> class Array {
+template <class T> class array {
 public:
   typedef T *pointer;
-  typedef T* iterator;
-  typedef T& reference;
-  typedef T& const_reference;
+  typedef T *iterator;
+  typedef T &reference;
+  typedef T &const_reference;
   typedef std::size_t size_type;
   /**
    * Creates an empty array with zero capacity.
    */
-  Array() : head_(nullptr), length_(0) { }
+  array() : head_(nullptr), length_(0) {}
 
   /**
    * Creates new array with given capacity.
    * @param capacity
    */
-  explicit Array(size_type capacity)
+  explicit array(size_type capacity)
       : head_(new T[capacity]), length_(capacity){};
-  
+
   /**
    * Creates new array with given capacity, and fills it with copies of 't'.
    * @param capacity
    * @param t
    */
-  Array(size_type capacity, const T &t)
+  array(size_type capacity, const T &t)
       : head_(new T[capacity]), length_(capacity) {
     fill(t);
   }
@@ -46,27 +48,43 @@ public:
    * @param begin T*
    * @param capacity unsigned long
    */
-  Array(pointer begin, unsigned long capacity)
-      : head_(begin), length_(capacity), auto_destruct(false) { }
+  array(pointer begin, unsigned long capacity)
+      : head_(begin), length_(capacity), auto_destruct(false) {}
 
   /**
    * Creates new array as 'fresh' copy of 'initializer'.
-   * @param initializer
+   * The newly-created %array contains the copies of the contents of the copied
+   * instance.
+   * @param instance
    */
-  Array(const Array<T>& initializer) : head_(new T[initializer.size()]), length_(initializer.size()) {
-    std::copy(initializer.head_, initializer.head_+initializer.length_, begin());
+  array(const array &instance)
+      : head_(new T[instance.size()]), length_(instance.size()) {
+    std::copy(instance.head_, instance.head_ + instance.length_, begin());
   }
 
   /**
-   * Move constructor.
-   * @param initializer
+   * @brief Move constructor.
+   * The newly-created %array contains the exact contents of the moved instance.
+   * @param instance
    */
-  Array(const Array<T>&& initializer) : head_(initializer.head_), length_(initializer.size()) { }
+  array(array &&instance) noexcept = default;
+
+  /**
+   * @brief Move assignment operator.
+   * @param instance
+   * @return
+   */
+  array &operator=(array &&instance) noexcept {
+    array<T> temporary;
+    swap(instance);
+    instance.swap(temporary);
+    return *this;
+  }
 
   /**
    * Destructor. Deletes every element.
    */
-  ~Array() {
+  ~array() {
     if (auto_destruct)
       delete[] head_;
   }
@@ -78,19 +96,6 @@ public:
    */
   reference operator[](unsigned long index) { return head_[index]; }
 
-  /**
-   * Array move assignment operator.
-   * @param array
-   * @return
-   */
-  Array& operator=(Array&& array)  noexcept = default;
-
-  /**
-   * Const array move assignment operator.
-   * @param array
-   * @return
-   */
-  Array& operator=(Array const& array)  noexcept = default;
   /**
    * Unsage container access.
    * @param index of element.
@@ -126,8 +131,8 @@ public:
    * Returns a fresh copy of this array with a new address.
    * @return array<T>
    */
-  Array<T> copy() {
-    Array<T> copy = Array<T>(length_);
+  array<T> copy() {
+    array<T> copy = array<T>(length_);
     std::copy(begin(), end(), copy.begin());
     return copy;
   }
@@ -137,7 +142,7 @@ public:
    * @param container T*
    * @param capacity size_type
    */
-  void set(T* container, size_type capacity) {
+  void set(T *container, size_type capacity) {
     head_ = container;
     length_ = capacity;
   }
@@ -147,8 +152,22 @@ private:
   pointer head_;
   // Length (# of T) of allocated memory.
   size_type length_;
-  // Boolean specifying whether the head_ should be destroyed when object is destroyed.
+  // Boolean specifying whether the head_ should be destroyed when object is
+  // destroyed.
   bool auto_destruct = true;
+
+  void copy(array<T> &instance) {
+    head_ = instance.head_;
+    length_ = instance.length_;
+  }
+  void swap(array<T> &instance) {
+    array<T> temporary;
+    temporary.copy(*this);
+    copy(instance);
+    instance.copy(temporary);
+  }
 };
+
+} // namespace array
 
 #endif // ATB_ARRAY_H
