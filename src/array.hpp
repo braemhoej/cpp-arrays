@@ -82,6 +82,13 @@ public:
   }
 
   /**
+   * @brief Move assignment operator.
+   * @param instance
+   * @return
+   */
+  array &operator=(const array &instance) = default;
+
+  /**
    * Destructor. Deletes every element.
    */
   ~array() {
