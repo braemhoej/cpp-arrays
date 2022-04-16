@@ -83,10 +83,14 @@ public:
    * @param array
    * @return
    */
-  Array& operator=(Array&& array)  noexcept {
-    this->head_ = array.head_;
-    this->length_ = array.length_;
-  }
+  Array& operator=(Array&& array)  noexcept = default;
+
+  /**
+   * Const array move assignment operator.
+   * @param array
+   * @return
+   */
+  Array& operator=(Array const& array)  noexcept = default;
   /**
    * Unsage container access.
    * @param index of element.
