@@ -61,8 +61,7 @@ public:
    * Move constructor.
    * @param initializer
    */
-  Array(const Array<T>&& initializer) : head_(initializer.head_), length_(initializer.size()) {
-  }
+  Array(const Array<T>&& initializer) : head_(initializer.head_), length_(initializer.size()) { }
 
   /**
    * Destructor. Deletes every element.
@@ -79,6 +78,15 @@ public:
    */
   reference operator[](unsigned long index) { return head_[index]; }
 
+  /**
+   * Array move assignment operator.
+   * @param array
+   * @return
+   */
+  Array& operator=(Array&& array)  noexcept {
+    this->head_ = array.head_;
+    this->length_ = array.length_;
+  }
   /**
    * Unsage container access.
    * @param index of element.
