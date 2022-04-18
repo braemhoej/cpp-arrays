@@ -5,6 +5,14 @@
 #include <gtest/gtest.h>
 #include "../src/array.hpp"
 
+arrays::array<arrays::array<int>> create() {
+  arrays::array<arrays::array<int>> array = arrays::array<arrays::array<int>>(42);
+      return array;
+}
+
+std::pair<arrays::array<arrays::array<int>>, arrays::array<arrays::array<int>>> createPair() {
+  return {create(), create()};
+}
 
 TEST(Initialization, ArraysCanBeInitializedWithValue) {
   arrays::array<int> array = arrays::array<int>(40, 42);
@@ -37,5 +45,18 @@ TEST(Assignment, ArrayElementsCanBeReassigned) {
 
 TEST(Size, ArraysSizeReturnsCapacity) {
   arrays::array<int> array = arrays::array<int>(40);
+
   EXPECT_EQ(40, array.size());
+}
+
+TEST(Move, CanMoveAssign) {
+  arrays::array<arrays::array<int>> array = create();
+  array[3] = arrays::array<int>(40, 42);
+  EXPECT_EQ(array[3][2], 42);
+}
+
+TEST(Move, CanMoveConstruct) {
+  arrays::array<int> array = arrays::array<int>(40, 42);
+  arrays::array<int> moved;
+  moved = std::move(array);
 }

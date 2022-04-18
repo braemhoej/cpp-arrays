@@ -58,16 +58,9 @@ public:
    * @param instance
    */
   array(const array &instance)
-      : head_(new T[instance.size()]), length_(instance.size()) {
+      : head_(new T[instance.size()]), length_(instance.size()), auto_destruct(instance.auto_destruct) {
     std::copy(instance.head_, instance.head_ + instance.length_, begin());
   }
-
-  /**
-   * @brief Move constructor.
-   * The newly-created %array contains the exact contents of the moved instance.
-   * @param instance
-   */
-  array(array &&instance) noexcept = default;
 
   /**
    * @brief Move assignment operator.
@@ -81,14 +74,8 @@ public:
     return *this;
   }
 
-  /**
-   * @brief Move assignment operator.
-   * @param instance
-   * @return
-   */
   array &operator=(const array &instance) = default;
-
-  /**
+      /**
    * Destructor. Deletes every element.
    */
   ~array() {
@@ -166,6 +153,7 @@ private:
   void copy(array<T> &instance) {
     head_ = instance.head_;
     length_ = instance.length_;
+    auto_destruct = instance.auto_destruct;
   }
   void swap(array<T> &instance) {
     array<T> temporary;
