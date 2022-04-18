@@ -63,19 +63,29 @@ public:
   }
 
   /**
-   * @brief Move assignment operator.
+   * @brief Move constructor.
+   * The newly-created %array contains the exact contents of the moved instance.
+   * @param instance
+   */
+  array(array &&instance)  noexcept : head_(nullptr), length_(0) {
+    std::swap(head_, instance.head_);
+    std::swap(length_, instance.length_);
+    std::swap(auto_destruct, instance.auto_destruct);
+  }
+
+  /**
+   * @brief Assignment operator.
    * @param instance
    * @return
    */
-  array &operator=(array &&instance) noexcept {
-    array<T> temporary;
-    swap(instance);
-    instance.swap(temporary);
+  array &operator=(array instance) noexcept {
+    std::swap(head_, instance.head_);
+    std::swap(length_, instance.length_);
+    std::swap(auto_destruct, instance.auto_destruct);
     return *this;
   }
 
-  array &operator=(const array &instance) = default;
-      /**
+  /**
    * Destructor. Deletes every element.
    */
   ~array() {
@@ -122,16 +132,6 @@ public:
   [[nodiscard]] size_type size() const { return length_; }
 
   /**
-   * Returns a fresh copy of this array with a new address.
-   * @return array<T>
-   */
-  array<T> copy() {
-    array<T> copy = array<T>(length_);
-    std::copy(begin(), end(), copy.begin());
-    return copy;
-  }
-
-  /**
    * Set internal container and capacity.
    * @param container T*
    * @param capacity size_type
@@ -149,18 +149,6 @@ private:
   // Boolean specifying whether the head_ should be destroyed when object is
   // destroyed.
   bool auto_destruct = true;
-
-  void copy(array<T> &instance) {
-    head_ = instance.head_;
-    length_ = instance.length_;
-    auto_destruct = instance.auto_destruct;
-  }
-  void swap(array<T> &instance) {
-    array<T> temporary;
-    temporary.copy(*this);
-    copy(instance);
-    instance.copy(temporary);
-  }
 };
 
 } // namespace array
