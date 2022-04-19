@@ -58,7 +58,7 @@ public:
    * @param instance
    */
   array(const array &instance)
-      : head_(new T[instance.size()]), length_(instance.size()), auto_destruct(instance.auto_destruct) {
+      : head_(new T[instance.size()]), length_(instance.size()), auto_destruct(true) {
     std::copy(instance.head_, instance.head_ + instance.length_, begin());
   }
 
